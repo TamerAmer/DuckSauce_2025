@@ -1,5 +1,6 @@
 import pygame
 import pygame.gfxdraw
+import numpy
 from os import path
 
 # Colours
@@ -25,7 +26,9 @@ def app_setup():
     screen, screen_size = get_display()
 
 def get_display():
-    screen_size = pygame.display.get_surface().get_size()
+    info = pygame.display.Info()
+    screen_size = (info.current_w, info.current_h)
+    #screen_size = pygame.display.get_desktop_sizes()
     screen = pygame.display.get_surface()
     return screen, screen_size
 
@@ -47,8 +50,51 @@ def draw_grid(tile_size):
             pygame.draw.rect(screen, BLACK, [x_offset + c*tile_size, y_offset + r*tile_size, tile_size, tile_size], 1)
 
 
+def check_grid(tile_size):
+    """Get grid coordinates of mouse."""
+    #mouse_pos = coords_point_to_from_pygame(pygame.mouse.get_pos())
+    mouse_pos = pygame.mouse.get_pos()
+    _, _, x_offset, y_offset = adjust_grid_for_screen(tile_size)
+    #[x_offset, y_offset] = coords_point_to_from_pygame([x_offset, y_offset])
+
+    tile_coords = (-1, -1)
+    for r in range(10):
+        for c in range(10):
+            tile = pygame.Rect(x_offset + c*tile_size, y_offset + r*tile_size, tile_size, tile_size)
+            if tile.collidepoint(mouse_pos):
+                tile_coords = (c, r)
+    return tile_coords
+
+
+def get_coords_from_grid_matrix(tile_size, coords):
+    """Get pixel coordinates from grid coordinates."""
+    _, grid_window, x_offset, y_offset = adjust_grid_for_screen(tile_size)
+    x = tile_size*coords[0] + x_offset
+    y = tile_size*coords[1] + y_offset
+    return [x, y]
+
+
 # Initialise
 pygame.init()
 update_clock = pygame.time.Clock()
+win = pygame.display.set_mode((1200, 900))
 
-app_setup()
+#app_setup()
+
+
+grid_coords = check_grid(GRID_SIZE)
+
+if (grid_coords[0] >= 0 and grid_coords[0] <= 9) and (grid_coords[1] >= 6 and grid_coords[1] <= 9):
+    grid_screen_coords = get_coords_from_grid_matrix(GRID_SIZE, grid_coords)
+
+running = True
+while running:
+    pygame.time.delay(50)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    win.fill(WHITE)
+    draw_grid(GRID_SIZE)
+    pygame.display.update()
