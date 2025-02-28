@@ -1,6 +1,5 @@
 import pygame
 import pygame.gfxdraw
-import numpy
 from os import path
 
 # Colours
