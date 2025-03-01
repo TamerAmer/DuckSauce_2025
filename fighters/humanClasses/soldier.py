@@ -5,8 +5,8 @@ import pygame
 
 class Soldier(Fighters):
     def __init__(self, selected, spritesheet):
-        super().init(selected, spritesheet)
-        pygame.sprite.Sprite.init(self)
+        super().__init__(selected, spritesheet)
+        pygame.sprite.Sprite.__init__(self)
         self.original_image = spritesheet.get_image_name("soldier")
         self.image = self.original_image  # Needed for proper rotation
         self.rect = self.image.get_rect()
