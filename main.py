@@ -1,100 +1,84 @@
 import pygame
-import pygame.gfxdraw
-import numpy
-from os import path
+import grid
+import settings
 
-# Colours
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-GREY = (79, 79, 69)
-YELLOW = (255, 255, 0)
-BLUE = (51, 153, 255)
-PURPLE = (255, 0, 255)
-ORANGE = (255, 165, 0)
-DODGER_BLUE = (30, 144, 255)
-LIGHT_BLUE = (135, 206, 250)
-TOMATO = (255, 99, 71)
+class Program:
+    def __init__(self):
+        # Initialise
+        pygame.init()
+        pygame.mixer.init()
+        info = pygame.display.Info()
+        self.screen_size = (info.current_w, info.current_h)
+        self.screen = pygame.display.set_mode((self.screen_size[0]*0.7, self.screen_size[1]*0.7))
+        pygame.display.set_caption(settings.TITLE)
+        self.clock = pygame.time.Clock()
+        self.running = True
+        #self.landscape = pygame.Rect(-200, 200, 2000, 2000)
+        self.all_sprites = pygame.sprite.Group()
+        self.all_drawings = []
+        self.simulating = False
+        #self.layer_sprites = pygame.sprite.Group()
 
-# Game Properties
-FPS = 20
-GRID_SIZE = 70
+    def load(self):
+        # Load resources
+        #self.spritesheet = spr.Spritesheet(SPRITESHEET, SPRITESHEET_XML)
+        print("Load")
 
-def app_setup():
-    #time.sleep(2)
-    screen, screen_size = get_display()
+    def new(self):
+        print("New")
 
-def get_display():
-    info = pygame.display.Info()
-    screen_size = (info.current_w, info.current_h)
-    #screen_size = pygame.display.get_desktop_sizes()
-    screen = pygame.display.get_surface()
-    return screen, screen_size
+    def program_loop(self):
+        # Performs a program loop
+        while self.running:
+            self.clock.tick(settings.FPS)
+            self.events()
+            self.draw()
+            self.update()
 
-def adjust_grid_for_screen(tile_size):
-    """Push grid in place by some offset."""
-    screen, screen_size = get_display()
-    grid_window = tile_size*10
-    x_offset = screen_size[0] // 2 - grid_window // 2
-    y_offset = screen_size[1] // 2 - grid_window // 2
-    #[x_offset, y_offset] = coords_point_to_from_pygame([x_offset, y_offset])
-    return screen, grid_window, x_offset, y_offset
+    def update(self):
+        fixedGrid.getMouseGridCoords()
+        self.all_sprites.update(self)
 
+    def events(self):
+        for event in pygame.event.get():
+            if event.type is pygame.QUIT:
+                self.running = False
+            keys = pygame.key.get_pressed()
+            if pygame.mouse.get_pressed()[0]:
+                mouse_pos = pygame.mouse.get_pos()
+                #print("in here")
+                #for i in self.all_sprites:
+                #    if i.rect.collidepoint(mouse_pos):
+                #        outline = hf.get_outline(i.image)
+                #        outline_rect = i.rect  # center=self.screen.center)
+                        # self.screen.blit(view_layer, (poly_rect.x, poly_rect.y))
+                        # pygame.display.update(poly_rect)
+                        # pygame.display.flip()
 
-def draw_grid(tile_size):
-    screen, _, x_offset, y_offset = adjust_grid_for_screen(tile_size)
+        #hf.camera_handler(self.landscape)
 
-    for r in range(10):
-        for c in range(10):
-            pygame.draw.rect(screen, BLACK, [x_offset + c*tile_size, y_offset + r*tile_size, tile_size, tile_size], 1)
+    def draw(self):
+        # Draw the screen
+        self.screen.fill(settings.FALLOW)
+        if self.simulating:
+            pass
+            # pygame.draw.rect(self.screen, FALLOW, self.landscape, 0)
+        #for i in range(4):  # Argument of range() must be one higher than the highest entity/immovable.layer value
+            #self.layer_sprites.empty()
+            #self.layer_sprites.add([x for x in self.all_sprites if x.layer == i])
+            #self.layer_sprites.draw(self.screen)
+        fixedGrid.drawGrid(self.screen)
+        pygame.display.flip()
 
-
-def check_grid(tile_size):
-    """Get grid coordinates of mouse."""
-    #mouse_pos = coords_point_to_from_pygame(pygame.mouse.get_pos())
-    mouse_pos = pygame.mouse.get_pos()
-    _, _, x_offset, y_offset = adjust_grid_for_screen(tile_size)
-    #[x_offset, y_offset] = coords_point_to_from_pygame([x_offset, y_offset])
-
-    tile_coords = (-1, -1)
-    for r in range(10):
-        for c in range(10):
-            tile = pygame.Rect(x_offset + c*tile_size, y_offset + r*tile_size, tile_size, tile_size)
-            if tile.collidepoint(mouse_pos):
-                tile_coords = (c, r)
-    return tile_coords
-
-
-def get_coords_from_grid_matrix(tile_size, coords):
-    """Get pixel coordinates from grid coordinates."""
-    _, grid_window, x_offset, y_offset = adjust_grid_for_screen(tile_size)
-    x = tile_size*coords[0] + x_offset
-    y = tile_size*coords[1] + y_offset
-    return [x, y]
-
-
-# Initialise
-pygame.init()
-update_clock = pygame.time.Clock()
-win = pygame.display.set_mode((1200, 900))
-
-#app_setup()
+    def show_title_screen(self):
+        # Draw the title screen
+        pass
 
 
-grid_coords = check_grid(GRID_SIZE)
+fixedGrid = grid.Grid(5, 6, 80, settings.GREEN, 100, 100)
+p = Program()
 
-if (grid_coords[0] >= 0 and grid_coords[0] <= 9) and (grid_coords[1] >= 6 and grid_coords[1] <= 9):
-    grid_screen_coords = get_coords_from_grid_matrix(GRID_SIZE, grid_coords)
-
-running = True
-while running:
-    pygame.time.delay(50)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    win.fill(WHITE)
-    draw_grid(GRID_SIZE)
-    pygame.display.update()
+p.load()
+p.new()
+while p.running:
+    p.program_loop()

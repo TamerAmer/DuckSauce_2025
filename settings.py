@@ -1,0 +1,5 @@
+TITLE = "Rift Invaders"
+FPS = 30
+FALLOW = (193, 154, 107)
+GREEN = (0, 255, 0)
+GRID_SPACE_SIZE = 80

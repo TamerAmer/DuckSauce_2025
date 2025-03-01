@@ -15,7 +15,7 @@ class Grid():
             for y in range(self.columns):
                 self.gridSpaceMetadata.append(GridSpace((x, y), None))
 
-    def DrawGrid(self, screen):
+    def drawGrid(self, screen):
         for r in range(self.rows):
             for c in range(self.columns):
                 pygame.draw.rect(screen, self.gridColour,
@@ -23,7 +23,7 @@ class Grid():
                                   self.gridOffsetZ + r * self.gridSpaceSize,
                                   self.gridSpaceSize, self.gridSpaceSize], 1)
 
-    def CheckAlienPlacement(self, alien, chosen_coords):
+    def checkAlienPlacement(self, alien, chosen_coords):
         parts_list = alien.returnParts()
         placement_valid = True
         for p in parts_list:
@@ -42,15 +42,29 @@ class Grid():
 
         return placement_valid
 
-    def AddAlien(self, alien, chosen_coords):
+    def addAlien(self, alien, chosen_coords):
         parts_list = alien.returnParts()
         for p in parts_list:
             coords = p.gridCo
             absolute_part_coords = coords + chosen_coords
             self.ModifyGridSpace(absolute_part_coords, p)
 
+    def getMouseGridCoords(self):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
 
-    def ModifyGridSpace(self, coords, alien_part):
+        # Convert to grid coordinates by subtracting offsets and dividing by cell size
+        grid_x = (mouse_x - self.gridOffsetX) // self.gridSpaceSize
+        grid_y = (mouse_y - self.gridOffsetZ) // self.gridSpaceSize
+
+        # Ensure the coordinates are within grid bounds
+        if 0 <= grid_x < self.columns and 0 <= grid_y < self.rows:
+            print(f"{grid_x}, {grid_y}")
+            return grid_x, grid_y
+        else:
+            return None  # Mouse is outside the grid
+
+
+    def modifyGridSpace(self, coords, alien_part):
         for i in self.gridSpaceMetadata:
             if i.coords() == coords:
                 i.alien_part = alien_part
