@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="TextureAtlas">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SubTexture" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string" />
+            <xs:attribute name="x" type="xs:int" />
+            <xs:attribute name="y" type="xs:int" />
+            <xs:attribute name="width" type="xs:int" />
+            <xs:attribute name="height" type="xs:int" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="imagePath" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
