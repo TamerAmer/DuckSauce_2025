@@ -23,31 +23,45 @@ class Grid():
                                   self.gridOffsetZ + r * self.gridSpaceSize,
                                   self.gridSpaceSize, self.gridSpaceSize], 1)
 
+
     def checkAlienPlacement(self, alien, chosen_coords):
+        print(chosen_coords)
         parts_list = alien.returnParts()
         placement_valid = True
+        if chosen_coords is None:
+            print("invalid")
+            return False
         for p in parts_list:
-            coords = p.gridCo
-            absolute_part_coords = coords + chosen_coords
+            relative_x, relative_y = p.gridCo
+            anchor_x, anchor_y = chosen_coords
 
+            absolute_x = anchor_x + relative_x
+            absolute_y = anchor_y + relative_y
+
+            print(f"abs {absolute_x}, {absolute_y}")
             # Check if alien parts are out of bound
-            if (absolute_part_coords < 0) or (absolute_part_coords > self.columns) or (absolute_part_coords < 0) or (absolute_part_coords > self.rows):
+            if absolute_x < 0 or absolute_x >= self.columns or absolute_y < 0 or absolute_y >= self.rows:
                 placement_valid = False
 
             # Check if alien parts collide with other alien parts
             for i in self.gridSpaceMetadata:
-                if (i.alien_part != None):
-                    if (i.coords == absolute_part_coords):
-                        placement_valid = False
+                if i.alien_part is not None and i.coords == (absolute_x, absolute_y):
+                    placement_valid = False
+                    break
 
+            if placement_valid == False:
+                break
+
+        print(placement_valid)
         return placement_valid
 
     def addAlien(self, alien, chosen_coords):
         parts_list = alien.returnParts()
         for p in parts_list:
-            coords = p.gridCo
-            absolute_part_coords = coords + chosen_coords
-            self.ModifyGridSpace(absolute_part_coords, p)
+            coords_x, coords_y = p.gridCo
+            absolute_part_coords_x = coords_x + chosen_coords[0]
+            absolute_part_coords_y = coords_y + chosen_coords[1]
+            self.modifyGridSpace((absolute_part_coords_x, absolute_part_coords_y), p)
 
     def getMouseGridCoords(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -66,7 +80,7 @@ class Grid():
 
     def modifyGridSpace(self, coords, alien_part):
         for i in self.gridSpaceMetadata:
-            if i.coords() == coords:
+            if i.coords == tuple(coords):
                 i.alien_part = alien_part
 
 
@@ -84,8 +98,3 @@ class GridSpace():
 
     def getMobPart(self):
         return self.alien_part
-
-
-
-
-

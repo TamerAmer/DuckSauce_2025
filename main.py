@@ -132,10 +132,10 @@ class Program:
         pass
 
 
-fixedGrid = grid.Grid(5, 6, 80, settings.GREEN, 100, 100)
+fixedGrid = grid.Grid(5,6,80,settings.GREEN, 100, 100)
 fixedGrid.GenerateCoordinates()
 
-crabManTile = card_selection.HandCard(0, 0, )
+crabManTile = card_selection.HandCard(0, 0)
 #self.all_sprites.add(crabManTile)
 
 p = Program()

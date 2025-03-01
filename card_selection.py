@@ -10,8 +10,8 @@ class HandCard(pygame.sprite.Sprite):
         self.image = pygame.image.load("assets/button.png")
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect()
-        self.rect = self.image.get_rect(topleft=(self.x, self.y))
+        self.rect = self.image.get_rect(topleft=(x, y))
 
     def selectFighter(self, x, y, spritesheet):
-        selected_fighter = crabMan.CrabMan(True, spritesheet, x, y)
+        selected_fighter = crabMan.CrabMan(True, spritesheet)
         return selected_fighter
