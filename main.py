@@ -54,11 +54,23 @@ class Program:
                 mouse_pos = pygame.mouse.get_pos()
 
                 # Check button collision
-                if crabManTile.rect.collidepoint(event.pos[0], event.pos[1]):
-                    selected_fighter = crabManTile.selectFighter(event.pos[0], event.pos[1], self.spritesheet)
-                    self.layer_sprites.add(selected_fighter)
-                    print(selected_fighter)
+                if crabManTile.rect.collidepoint(event.pos[0], event.pos[1]) and (self.selected_fighter == None):
+                    self.selected_fighter = crabManTile.selectFighter(event.pos[0], event.pos[1], self.spritesheet)
+                    self.all_sprites.add(self.selected_fighter)
                 
+            # Drag and drop creater
+            if self.selected_fighter is not None:
+                mouse_pos = pygame.mouse.get_pos()
+                self.selected_fighter.x = mouse_pos[0]
+                self.selected_fighter.rect.x = mouse_pos[0]
+                self.selected_fighter.y = mouse_pos[1]
+                self.selected_fighter.rect.y = mouse_pos[1]
+                if not pygame.mouse.get_pressed()[0]:  # This means that the selected fighter is deselected
+                    if self.selected_fighter in self.all_sprites:
+                        self.all_sprites.remove(self.selected_fighter)
+                    self.selected_fighter = None
+
+                    
 
             if self.selected_fighter is not None:
                 mouse_pos = pygame.mouse.get_pos()
