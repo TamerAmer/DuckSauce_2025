@@ -1,4 +1,5 @@
 import pygame.sprite
+import settings
 from fighters.alienClasses import crabMan
 
 class HandCard(pygame.sprite.Sprite):

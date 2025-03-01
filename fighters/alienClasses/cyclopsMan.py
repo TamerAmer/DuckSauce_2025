@@ -5,8 +5,8 @@ import pygame
 
 class CyclopsMan(Fighters):
     def __init__(self, selected, spritesheet):
-        super().__init__(selected, spritesheet)
-        pygame.sprite.Sprite.__init__(self)
+        super().init(selected, spritesheet)
+        pygame.sprite.Sprite.init(self)
         self.original_image = spritesheet.get_image_name("cyclopsman")
         self.image = self.original_image  # Needed for proper rotation
         self.rect = self.image.get_rect()
