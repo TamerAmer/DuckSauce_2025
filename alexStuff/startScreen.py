@@ -10,7 +10,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Button with Image")
 
 # 3. Load and scale the background image
-background_image = pygame.image.load("alexStuff/IMG_rift.png")
+background_image = pygame.image.load("./assets/IMG_rift.png")
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 
 # 4. Create a 'button' rectangle (we'll use this to detect clicks)
@@ -19,12 +19,12 @@ button_rect = pygame.Rect(0, 0, button_width, button_height)
 button_rect.center = (WIDTH // 2, HEIGHT // 2)
 
 # 5. Load an image to place inside the button (normal state)
-button_icon = pygame.image.load("alexStuff/Butts1.png")
+button_icon = pygame.image.load("./assets/Butts1.png")
 icon_width, icon_height = button_width, button_width
 button_icon = pygame.transform.scale(button_icon, (icon_width, icon_height))
 
 # **Load an image for the hover state**
-button_icon_hover = pygame.image.load("alexStuff/Butts2.png")
+button_icon_hover = pygame.image.load("./assets/Butts2.png")
 button_icon_hover = pygame.transform.scale(button_icon_hover, (icon_width, icon_height))
 
 # 6. Get a Rect for the icons, so we can place them in the button center
