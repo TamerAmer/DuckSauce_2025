@@ -1,4 +1,4 @@
-from fighters.fighters import Fighters
+from fighters import Fighters
 from parts import Parts
 from battleTypes import BattleType
 
