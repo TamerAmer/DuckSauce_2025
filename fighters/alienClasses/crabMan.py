@@ -1,8 +1,8 @@
-from aliens import Alien
+from fighters.fighters import Fighters
 from parts import Parts
 from battleTypes import BattleType
 
-class CrabMan(Alien):
+class CrabMan(Fighters):
     def __init__(self, selected):
         super().__init__(selected)
         self.shape = [[0,0],[0,1],[1,1],[1,0]]
