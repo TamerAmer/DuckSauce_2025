@@ -2,7 +2,7 @@ import pygame
 import grid
 import settings
 import sprites as spr
-from aliens import crabMan
+from fighters.alienClasses import crabMan
 import card_selection
 
 
@@ -66,12 +66,40 @@ class Program:
                 self.selected_fighter.y = mouse_pos[1]
                 self.selected_fighter.rect.y = mouse_pos[1]
                 if not pygame.mouse.get_pressed()[0]:  # This means that the selected fighter is deselected
+                    self.all_sprites.remove(self.selected_fighter)
                     self.selected_fighter = None
+
+                    # Here we place aliens
+                    new_crab_man = crabMan.CrabMan(True, self.spritesheet)
+                    isPlacementValid = fixedGrid.checkAlienPlacement(new_crab_man, fixedGrid.getMouseGridCoords())
+                    if isPlacementValid:
+                        fixedGrid.addAlien(new_crab_man, fixedGrid.getMouseGridCoords())
+                        new_crab_man.rect.x = fixedGrid.gridOffsetX + fixedGrid.getMouseGridCoords()[0] * fixedGrid.gridSpaceSize
+                        new_crab_man.rect.y = fixedGrid.gridOffsetZ + fixedGrid.getMouseGridCoords()[1] * fixedGrid.gridSpaceSize
+
+                        self.all_sprites.add(new_crab_man)
+
 
 
             #self.layer_sprites.empty()
             #self.layer_sprites.add([x for x in self.all_sprites])
             #self.layer_sprites.draw(self.screen)
+                    if self.selected_fighter in self.all_sprites:
+                        self.all_sprites.remove(self.selected_fighter)
+                    self.selected_fighter = None
+
+                    
+
+            if self.selected_fighter is not None:
+                mouse_pos = pygame.mouse.get_pos()
+                # if pygame.mouse.get_pressed()[0]:
+                    # self.selected_fighter = None
+                self.selected_fighter.x = mouse_pos[0]
+                self.selected_fighter.y = mouse_pos[1]
+
+            self.layer_sprites.empty()
+            self.layer_sprites.add([x for x in self.all_sprites])
+            self.layer_sprites.draw(self.screen)
                 #for i in self.all_sprites:
                 #    self.all_sprites.draw(self.screen)
 
@@ -105,6 +133,8 @@ class Program:
 
 
 fixedGrid = grid.Grid(5, 6, 80, settings.GREEN, 100, 100)
+fixedGrid.GenerateCoordinates()
+
 crabManTile = card_selection.HandCard(0, 0, )
 #self.all_sprites.add(crabManTile)
 
