@@ -1,6 +1,10 @@
 import pygame
 import grid
 import settings
+import sprites as spr
+from aliens import crabMan
+import card_selection
+
 
 class Program:
     def __init__(self):
@@ -17,15 +21,16 @@ class Program:
         self.all_sprites = pygame.sprite.Group()
         self.all_drawings = []
         self.simulating = False
-        #self.layer_sprites = pygame.sprite.Group()
+        self.layer_sprites = pygame.sprite.Group()
+        self.selected_fighter = None
 
     def load(self):
         # Load resources
-        #self.spritesheet = spr.Spritesheet(SPRITESHEET, SPRITESHEET_XML)
+        self.spritesheet = spr.Spritesheet(settings.SPRITESHEET, settings.SPRITESHEET_XML)
         print("Load")
 
     def new(self):
-        print("New")
+        print("yo")
 
     def program_loop(self):
         # Performs a program loop
@@ -34,6 +39,7 @@ class Program:
             self.events()
             self.draw()
             self.update()
+
 
     def update(self):
         fixedGrid.getMouseGridCoords()
@@ -46,8 +52,29 @@ class Program:
             keys = pygame.key.get_pressed()
             if pygame.mouse.get_pressed()[0]:
                 mouse_pos = pygame.mouse.get_pos()
-                #print("in here")
+
+                # Check button collision
+                if crabManTile.rect.collidepoint(event.pos[0], event.pos[1]) and (self.selected_fighter == None):
+                    self.selected_fighter = crabManTile.selectFighter(event.pos[0], event.pos[1], self.spritesheet)
+                    self.all_sprites.add(self.selected_fighter)
+
+            # Drag and drop creater
+            if self.selected_fighter is not None:
+                mouse_pos = pygame.mouse.get_pos()
+                self.selected_fighter.x = mouse_pos[0]
+                self.selected_fighter.rect.x = mouse_pos[0]
+                self.selected_fighter.y = mouse_pos[1]
+                self.selected_fighter.rect.y = mouse_pos[1]
+                if not pygame.mouse.get_pressed()[0]:  # This means that the selected fighter is deselected
+                    self.selected_fighter = None
+
+
+            #self.layer_sprites.empty()
+            #self.layer_sprites.add([x for x in self.all_sprites])
+            #self.layer_sprites.draw(self.screen)
                 #for i in self.all_sprites:
+                #    self.all_sprites.draw(self.screen)
+
                 #    if i.rect.collidepoint(mouse_pos):
                 #        outline = hf.get_outline(i.image)
                 #        outline_rect = i.rect  # center=self.screen.center)
@@ -60,14 +87,16 @@ class Program:
     def draw(self):
         # Draw the screen
         self.screen.fill(settings.FALLOW)
-        if self.simulating:
-            pass
+
             # pygame.draw.rect(self.screen, FALLOW, self.landscape, 0)
         #for i in range(4):  # Argument of range() must be one higher than the highest entity/immovable.layer value
-            #self.layer_sprites.empty()
-            #self.layer_sprites.add([x for x in self.all_sprites if x.layer == i])
+        #    self.layer_sprites.empty()
+        #    self.layer_sprites.add([x for x in self.all_sprites if x.layer == i])
             #self.layer_sprites.draw(self.screen)
         fixedGrid.drawGrid(self.screen)
+
+        self.all_sprites.draw(self.screen)
+        self.screen.blit(crabManTile.image, crabManTile.rect.topleft)
         pygame.display.flip()
 
     def show_title_screen(self):
@@ -76,6 +105,9 @@ class Program:
 
 
 fixedGrid = grid.Grid(5, 6, 80, settings.GREEN, 100, 100)
+crabManTile = card_selection.HandCard(0, 0, )
+#self.all_sprites.add(crabManTile)
+
 p = Program()
 
 p.load()
