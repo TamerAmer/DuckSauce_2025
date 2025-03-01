@@ -23,10 +23,15 @@ class Program:
         self.simulating = False
         self.layer_sprites = pygame.sprite.Group()
         self.selected_fighter = None
+        self.card_list = []
 
     def load(self):
         # Load resources
         self.spritesheet = spr.Spritesheet(settings.SPRITESHEET, settings.SPRITESHEET_XML)
+
+        crabManTile = card_selection.HandCard(0, 0, self.spritesheet, "crabman")
+        self.card_list.append(crabManTile)
+        self.all_sprites.add(crabManTile)
         print("Load")
 
     def new(self):
@@ -54,9 +59,10 @@ class Program:
                 mouse_pos = pygame.mouse.get_pos()
 
                 # Check button collision
-                if crabManTile.rect.collidepoint(event.pos[0], event.pos[1]) and (self.selected_fighter == None):
-                    self.selected_fighter = crabManTile.selectFighter(event.pos[0], event.pos[1], self.spritesheet)
-                    self.all_sprites.add(self.selected_fighter)
+                for i in self.card_list:
+                    if i.rect.collidepoint(event.pos[0], event.pos[1]) and (self.selected_fighter == None):
+                        self.selected_fighter = i.selectFighter(event.pos[0], event.pos[1], self.spritesheet)
+                        self.all_sprites.add(self.selected_fighter)
 
             # Drag and drop creater
             if self.selected_fighter is not None:
@@ -124,7 +130,7 @@ class Program:
         fixedGrid.drawGrid(self.screen)
 
         self.all_sprites.draw(self.screen)
-        self.screen.blit(crabManTile.image, crabManTile.rect.topleft)
+        #self.screen.blit(crabManTile.image, crabManTile.rect.topleft)
         pygame.display.flip()
 
     def show_title_screen(self):
@@ -135,7 +141,6 @@ class Program:
 fixedGrid = grid.Grid(5,6,80,settings.GREEN, 100, 100)
 fixedGrid.GenerateCoordinates()
 
-crabManTile = card_selection.HandCard(0, 0)
 #self.all_sprites.add(crabManTile)
 
 p = Program()

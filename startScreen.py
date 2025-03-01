@@ -1,5 +1,6 @@
 import pygame
 import sys
+import main
 
 # 1. Initialize pygame
 pygame.init()
@@ -7,10 +8,10 @@ pygame.init()
 # 2. Define screen dimensions and create the display surface
 WIDTH, HEIGHT = 800, 442
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Button with Image")
+
 
 # 3. Load and scale the background image
-background_image = pygame.image.load("./assets/IMG_rift.png")
+background_image = pygame.image.load("assets/IMG_rift.png")
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 
 # 4. Create a 'button' rectangle (we'll use this to detect clicks)
@@ -19,7 +20,7 @@ button_rect = pygame.Rect(0, 0, button_width, button_height)
 button_rect.center = (WIDTH // 2, HEIGHT // 2)
 
 # 5. Load an image to place inside the button (normal state)
-button_icon = pygame.image.load("./assets/Butts1.png")
+button_icon = pygame.image.load("./assets/Buts1.png")
 icon_width, icon_height = button_width, button_width
 button_icon = pygame.transform.scale(button_icon, (icon_width, icon_height))
 
@@ -45,7 +46,8 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Check if the user clicked on the button area
             if button_rect.collidepoint(event.pos):
-                print("Button clicked!")
+                print("Clicked")
+
 
     # 9. Draw the background image
     screen.blit(background_image, (0, 0))
