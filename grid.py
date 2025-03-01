@@ -58,7 +58,7 @@ class Grid():
 
         # Ensure the coordinates are within grid bounds
         if 0 <= grid_x < self.columns and 0 <= grid_y < self.rows:
-            print(f"{grid_x}, {grid_y}")
+            #print(f"{grid_x}, {grid_y}")
             return grid_x, grid_y
         else:
             return None  # Mouse is outside the grid
