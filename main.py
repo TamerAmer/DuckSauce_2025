@@ -2,7 +2,7 @@ import pygame
 import grid
 import settings
 import sprites as spr
-from aliens import crabMan
+from fighters.alienClasses import crabMan 
 import card_selection
 
 
