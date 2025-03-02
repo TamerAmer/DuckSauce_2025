@@ -30,7 +30,7 @@ class Program:
         self.grid_aliens = []
         self.grid_humans = []
         self.battle_button = None
-        self.game_state = 0  # 0 for monster selection, 1 for battle
+        self.game_state = 2  # 0 for monster selection, 1 for battle, 2 for new wave
 
     def load(self):
         # Load resources
@@ -103,11 +103,19 @@ class Program:
             self.all_sprites.update(self)
 
 
+    def new_wave(self):
+        self.populate_humans()
+
     def events(self):
         for event in pygame.event.get():
             # Quit logic
             if event.type is pygame.QUIT:
                 self.running = False
+
+            # New wave
+            if self.game_state == 2:
+                self.new_wave()
+                self.game_state = 0
 
             # Card selection logic
             if self.game_state == 0:
@@ -133,11 +141,16 @@ class Program:
                         # Here we place aliens
                         selected_alien = copy.deepcopy(self.selected_fighter)
 
-                        # Check if alien is placed on the right-hand side
-                        #(grid_x, grid_y) = self.grid.getMouseGridCoords() is (0, 0) or (0, 1) or (0, 2) or
-
                         # Check if placement is not on top of other alien or out of bounds
                         isPlacementValid = self.grid.checkAlienPlacement(selected_alien, self.grid.getMouseGridCoords())
+
+                        # Check if alien is placed on the right-hand side
+                        grid_coords = self.grid.getMouseGridCoords()
+                        if grid_coords is not None:
+                            if ((0 <= grid_coords[0] <= 3)):
+                                print(grid_coords[0])
+                                isPlacementValid = False
+
                         if isPlacementValid:
                             self.grid.addAlien(selected_alien, self.grid.getMouseGridCoords(), 0)
                             selected_alien.rect.x = self.grid.gridOffsetX + self.grid.getMouseGridCoords()[0] * self.grid.gridSpaceSize
@@ -160,7 +173,9 @@ class Program:
 
             # Battle logic
             if self.game_state == 1:
-                self.alien_action()
+                #self.populate_humans()
+                self.game_state = 0
+                #self.alien_action()
                 #self.battle()
             #TODO if battle end, self.game_state = 0
 
@@ -177,8 +192,8 @@ class Program:
             self.screen.blit(self.battle_button[4], self.battle_button[1])
         pygame.display.flip()
 
-    def populate_humans(self, grid, spritesheet):
-        possible_anchors = [(row, col) for row in range(grid.rows) for col in range(4)]
+    def populate_humans(self):
+        possible_anchors = [(row, col) for row in range(self.grid.rows) for col in range(4)]
         random.shuffle(possible_anchors)
 
         placed_count = 0
@@ -192,7 +207,7 @@ class Program:
 
         for UnitClass, count in unit_order:
             for i in range(count):
-                new_unit = UnitClass(True, spritesheet)
+                new_unit = UnitClass(True, self.spritesheet)
 
                 if not hasattr(new_unit, "shape"):
                     print(f"WARNING: {new_unit.__class__.__name__} missing 'shape'. Defaulting to (0,0).")
@@ -203,15 +218,15 @@ class Program:
                     occupied_tiles = [(anchor_x + dx, anchor_y + dy) for dx, dy in new_unit.shape]
 
                     if all(
-                            0 <= tile[0] < grid.rows and
+                            0 <= tile[0] < self.grid.rows and
                             0 <= tile[1] < 4 and
                             tile not in used_spaces
                             for tile in occupied_tiles
                     ):
-                        grid.addAlien(new_unit, (anchor_x, anchor_y))
+                        self.grid.addAlien(new_unit, (anchor_x, anchor_y), 1)
 
-                        new_unit.rect.x = grid.gridOffsetX + anchor_y * grid.gridSpaceSize
-                        new_unit.rect.y = grid.gridOffsetZ + anchor_x * grid.gridSpaceSize
+                        new_unit.rect.x = self.grid.gridOffsetX + anchor_y * self.grid.gridSpaceSize
+                        new_unit.rect.y = self.grid.gridOffsetZ + anchor_x * self.grid.gridSpaceSize
 
                         self.all_sprites.add(new_unit)
 
