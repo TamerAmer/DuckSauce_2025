@@ -2,7 +2,7 @@ import settings
 import pygame
 
 class Fighters(pygame.sprite.Sprite):
-    def __init__(self, selected, spritesheet,):
+    def __init__(self, selected, spritesheet):
         pygame.sprite.Sprite.__init__(self)
         self.selected = selected
         self.spritesheet = spritesheet
