@@ -12,11 +12,11 @@ class CrabMan(Fighters):
         self.image = self.original_image  # Needed for proper rotation
         self.image = pygame.transform.scale(self.image,(settings.GRID_SPACE_SIZE * 2, settings.GRID_SPACE_SIZE*2))
         self.rect = self.image.get_rect()
-        self.shape = [[0,0],[0,1],[1,1],[1,0]]
-        self.parts = [Parts(2, self.shape[0],"crab",8, BattleType.Land),
-                      Parts(2, self.shape[1],"crab",8, BattleType.Land), 
-                      Parts(2, self.shape[2],"crab",8, BattleType.Land), 
-                      Parts(2, self.shape[3],"crab",8, BattleType.Land)]
+        self.shape = [(0,0),(0,1),(1,1),(1,0)]
+        self.parts = [Parts(2, self.shape[0], "crab",8, BattleType.Land),
+                      Parts(2, self.shape[1], "crab",8, BattleType.Land),
+                      Parts(2, self.shape[2], "crab",8, BattleType.Land),
+                      Parts(2, self.shape[3], "crab",8, BattleType.Land)]
     
 
     def returnParts(self):

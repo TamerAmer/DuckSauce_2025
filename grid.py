@@ -11,8 +11,8 @@ class Grid():
         self.gridOffsetZ = gridOffsetZ
 
     def GenerateCoordinates(self):
-        for x in range(self.rows):
-            for y in range(self.columns):
+        for y in range(self.rows):
+            for x in range(self.columns):
                 self.gridSpaceMetadata.append(GridSpace((x, y), None))
 
     def drawGrid(self, screen):
@@ -62,6 +62,7 @@ class Grid():
             absolute_part_coords_x = coords_x + chosen_coords[0]
             absolute_part_coords_y = coords_y + chosen_coords[1]
             self.modifyGridSpace((absolute_part_coords_x, absolute_part_coords_y), p)
+            print(f"{absolute_part_coords_x} {absolute_part_coords_y}")
 
     def getMouseGridCoords(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()

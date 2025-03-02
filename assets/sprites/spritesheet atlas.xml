@@ -1,3 +1,13 @@
 <TextureAtlas imagePath="spritesheet.png">
     <SubTexture name="crabman" x="0" y="0" width="500" height="500"/>
+    <SubTexture name="waspman" x="501" y="0" width="500" height="500"/>
+    <SubTexture name="cyclopsman" x="1001" y="0" width="500" height="250"/>
+    <SubTexture name="rayman" x="1501" y="0" width="250" height="250"/>
+    <SubTexture name="solider" x="0" y="501" width="250" height="250"/>
+    <SubTexture name="plantman" x="501" y="501" width="750" height="500"/>
+    <SubTexture name="wizzard" x="1001" y="251" width="250" height="500"/>
+    <SubTexture name="lazyman" x="1250" y="251" width="750" height="750"/>
+    <SubTexture name="cannon" x="0" y="751" width="500" height="250"/>
+    <SubTexture name="mech" x="0" y="1001" width="500" height="500"/>
+
 </TextureAtlas>
