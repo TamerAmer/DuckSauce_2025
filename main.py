@@ -29,6 +29,7 @@ class Program:
         self.card_list = []
         self.grid = []
         self.grid_aliens = []
+        self.battle_button = None
 
     def load(self):
         # Load resources
@@ -72,7 +73,24 @@ class Program:
         self.all_sprites.add(crabManTile)
         self.all_sprites.add(rayManTile)
         self.all_sprites.add(cyclopsManTile)
-                
+
+        self.battle_button = self.battleButton()
+
+    def battleButton(self):
+        button_width, button_height = 100, 100
+        button_rect = pygame.Rect(0, 0, button_width, button_height)
+        button_rect.center = (800, 520)
+        button_icon = pygame.image.load("assets/button1.png").convert_alpha()
+        icon_width, icon_height = button_width, button_width
+        button_icon = pygame.transform.scale(button_icon, (icon_width, icon_height))
+        button_icon_hover = pygame.image.load("assets/button2.png").convert_alpha()
+        button_icon_hover = pygame.transform.scale(button_icon_hover, (icon_width, icon_height))
+        button_icon_rect = button_icon.get_rect()
+        button_icon_rect.center = button_rect.center
+        button_icon_hover_rect = button_icon_hover.get_rect()
+        button_icon_hover_rect.center = button_rect.center
+
+        return (button_rect, button_icon_rect, button_icon_hover, button_icon_hover_rect, button_icon)
 
     def program_loop(self):
         # Performs a program loop
@@ -122,17 +140,6 @@ class Program:
                     self.all_sprites.remove(self.selected_fighter)
                     self.selected_fighter = None
 
-
-
-            #self.layer_sprites.empty()
-            #self.layer_sprites.add([x for x in self.all_sprites])
-            #self.layer_sprites.draw(self.screen)
-                    if self.selected_fighter in self.all_sprites:
-                        self.all_sprites.remove(self.selected_fighter)
-                    self.selected_fighter = None
-
-                    
-
             if self.selected_fighter is not None:
                 mouse_pos = pygame.mouse.get_pos()
                 # if pygame.mouse.get_pressed()[0]:
@@ -140,16 +147,21 @@ class Program:
                 self.selected_fighter.x = mouse_pos[0]
                 self.selected_fighter.y = mouse_pos[1]
 
-            self.layer_sprites.empty()
-            self.layer_sprites.add([x for x in self.all_sprites])
-            self.layer_sprites.draw(self.screen)
+            # Battle button event
+            if event.type == pygame.MOUSEBUTTONDOWN and self.battle_button[0].collidepoint(event.pos):
+                print("horray")
+
+
 
     def draw(self):
         for image, position in self.all_drawings:
             self.screen.blit(image, position)
         self.grid.drawGrid(self.screen)
         self.all_sprites.draw(self.screen)
-        #self.screen.blit(crabManTile.image, crabManTile.rect.topleft)
+        if self.battle_button[0].collidepoint(pygame.mouse.get_pos()):
+            self.screen.blit(self.battle_button[2], self.battle_button[3])
+        else:
+            self.screen.blit(self.battle_button[4], self.battle_button[1])
         pygame.display.flip()
 
     def show_title_screen(self):
